@@ -1,6 +1,3 @@
-@description('Location to use for all resources')
-param location string
-
 @description('The tags to associate with the resource')
 param tags object
 
@@ -8,7 +5,7 @@ var registryName = 'acr${uniqueString(resourceGroup().id, subscription().subscri
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {
   name: registryName
-  location: location
+  location: resourceGroup().location
   properties: {
     adminUserEnabled: true
   }
@@ -21,7 +18,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = 
 var identityName = 'identity${uniqueString(resourceGroup().id, subscription().id)}'
 
 resource userId 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' = {
-  location: location
+  location: resourceGroup().location
   name: identityName
   tags: tags
 }
@@ -48,7 +45,7 @@ resource roleAssignmentRG 'Microsoft.Authorization/roleAssignments@2022-04-01' =
 
 resource deploymentScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = {
   name: 'inlineCLI'
-  location: location
+  location: resourceGroup().location
   dependsOn: [roleAssignmentACR]
   kind: 'AzureCLI'
   identity: {

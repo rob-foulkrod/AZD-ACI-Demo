@@ -23,7 +23,6 @@ module acr 'modules/containerRegistry.bicep' ={
   name: 'acr'
   scope: rg
   params: {
-    location: location
     tags: tags
   }
 }
@@ -32,7 +31,6 @@ module aci 'modules/containerInstance.bicep' = {
   name: 'aci'
   scope: rg
   params: {
-    location: location
     tags: tags
     acrName: acr.outputs.registryName
   }

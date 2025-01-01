@@ -1,6 +1,3 @@
-@description('Location to use for all resources')
-param location string
-
 @description('The tags to associate with the resource')
 param tags object
 
@@ -15,7 +12,7 @@ resource registry 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' ex
 
 resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2024-10-01-preview' = {
   name: containerInstanceName
-  location: location
+  location: resourceGroup().location
   tags: tags  
   properties: {
     ipAddress: {
