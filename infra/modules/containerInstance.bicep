@@ -4,7 +4,7 @@ param tags object
 @description('Name of the ACR to use in the same resource group')
 param acrName string
 
-var containerInstanceName = 'aci${uniqueString(resourceGroup().id, subscription().id)}'
+var containerInstanceName = 'aci-${uniqueString(resourceGroup().id, subscription().id)}'
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' existing = {
   name: acrName
@@ -37,11 +37,25 @@ resource containerInstance 'Microsoft.ContainerInstance/containerGroups@2024-10-
       {
         name: 'container-${containerInstanceName}'
         properties: {
-          image: '${registry.properties.loginServer}/pdetender/eshopwebmvc:latest'        
+          image: '${registry.properties.loginServer}/maartenvandiemen/eshoponweb:latest'        
           ports: [
             {
               port: 80
               protocol: 'TCP'
+            }
+          ]
+          environmentVariables: [
+            {
+              name: 'ASPNETCORE_ENVIRONMENT'
+              value: 'Docker'
+            }
+            {
+              name: 'UseOnlyInMemoryDatabase'
+              value: 'true'
+            }
+            {
+              name: 'ASPNETCORE_HTTP_PORTS'
+              value: '80'
             }
           ]
           resources: {
